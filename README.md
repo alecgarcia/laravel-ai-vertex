@@ -70,6 +70,10 @@ Vertex serves Gemini text through two APIs:
 - **generateContent** serves the Gemini 2.5 models and the regional locations, and
   supports explicit context caching (pass `cachedContent` as a provider option).
 
+Gemini 3.x models are only served from the `global` location, on both APIs; they are
+not published in regional locations such as `us-central1`. If you send a Gemini 3.x model
+through generateContent, set `apis.generate_content.location` to `global`.
+
 A small router picks the API per model: names starting `gemini-2` use
 generateContent, everything else uses Interactions, and `model_apis` overrides
 either. Each API has its own location. generateContent does not support streaming
