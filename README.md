@@ -82,6 +82,25 @@ or attachments yet and says so with an exception.
 Auth modes: both mint a Bearer token. Google REST keys need the `x-goog-api-key`
 header, which the Vertex endpoints do not accept.
 
+## Explicit context caching
+
+On the generateContent path you can send a cached prompt prefix that you created
+through Vertex's `cachedContents` API (the package does not create or delete caches):
+
+```php
+public function providerOptions(Lab|string $provider): array
+{
+    return ['cachedContent' => 'projects/.../locations/us-central1/cachedContents/123'];
+}
+```
+
+The cache must live in the same location as `apis.generate_content.location` and
+belong to the same model. The system instruction and any tools have to be inside the
+cache, so the request itself must send none: use an agent with empty instructions and
+no tools, because Vertex rejects the request with a 400 otherwise. The cached tokens are
+reported as `cacheReadInputTokens`, and `uncachedInputTokens()` leaves them out.
+Interactions has no explicit caching, only the implicit caching Google applies itself.
+
 ## Layout
 
 | Class                                  | Responsibility                                                                              |
